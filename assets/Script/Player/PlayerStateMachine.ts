@@ -1,24 +1,10 @@
 import { _decorator, Animation, AnimationClip, Component, SpriteFrame } from 'cc'
 import { FSM_PARAMS_TYPE_ENUM, PARAMS_NAME_ENUM } from 'db://assets/Enums'
 import State from 'db://assets/Base/State'
-import { StateMachine } from 'db://assets/Base/StateMachine'
+import { getInitParamsNumber, getInitParamsTrigger, StateMachine } from 'db://assets/Base/StateMachine'
 
 const { ccclass, property } = _decorator
 
-type ParamsValueType = boolean | number
-
-export interface IParamsValue {
-  type: FSM_PARAMS_TYPE_ENUM
-  value: ParamsValueType
-}
-
-
-export const getInitParamsTrigger = () => {
-  return {
-    type: FSM_PARAMS_TYPE_ENUM.TRIGGER,
-    value: false,
-  }
-}
 
 @ccclass('PlayerStateMachine')
 export class PlayerStateMachine extends StateMachine {
@@ -34,8 +20,8 @@ export class PlayerStateMachine extends StateMachine {
 
   private initParams() {
     this.params.set(PARAMS_NAME_ENUM.IDLE, getInitParamsTrigger())
-
     this.params.set(PARAMS_NAME_ENUM.TURNLEFT, getInitParamsTrigger())
+    this.params.set(PARAMS_NAME_ENUM.DIRECTION,getInitParamsNumber())
   }
 
   private initStateMachines() {

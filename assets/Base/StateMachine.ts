@@ -12,10 +12,22 @@ export interface IParamsValue {
 }
 
 
+export interface IParamsValue {
+  type: FSM_PARAMS_TYPE_ENUM
+  value: ParamsValueType
+}
+
 export const getInitParamsTrigger = () => {
   return {
     type: FSM_PARAMS_TYPE_ENUM.TRIGGER,
     value: false,
+  }
+}
+
+export const getInitParamsNumber = () => {
+  return {
+    type: FSM_PARAMS_TYPE_ENUM.NUMBER,
+    value: 0,
   }
 }
 

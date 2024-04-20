@@ -1,12 +1,14 @@
-import { _decorator, Component, Node, Sprite, UITransform, Animation, AnimationClip, animation, SpriteFrame } from 'cc'
-import { TileMapManager } from 'db://assets/Script/Tile/TileMapManager'
-import { createUINode } from 'db://assets/Utils'
-import Levels, { ILevel } from 'db://assets/Levels'
-import DataManager from 'db://assets/Runtime/DataManager'
+import { _decorator, Component, Sprite, UITransform } from 'cc'
 import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/Script/Tile/TileManager'
 import EventManager from 'db://assets/Runtime/EventManager'
-import { CONTROLLER_ENUM, EVENT_ENUM, PARAMS_NAME_ENUM } from 'db://assets/Enums'
-import ResourceManager from 'db://assets/Runtime/ResourceManager'
+import {
+  CONTROLLER_ENUM,
+  DIRECTION_ENUM,
+  DIRECTION_ORDER_ENUM,
+  ENTITY_STATE_ENUM,
+  EVENT_ENUM,
+  PARAMS_NAME_ENUM,
+} from 'db://assets/Enums'
 import { PlayerStateMachine } from 'db://assets/Script/Player/PlayerStateMachine'
 
 const { ccclass, property } = _decorator
@@ -21,6 +23,26 @@ export class PlayerManager extends Component {
   private readonly speed = 1 / 10
   private fsm: PlayerStateMachine
 
+  private _direction: DIRECTION_ENUM
+  private _state: ENTITY_STATE_ENUM
+
+  get direction() {
+    return this._direction
+  }
+
+  set direction(newDirection) {
+    this._direction = newDirection
+    this.fsm.setParams(PARAMS_NAME_ENUM.DIRECTION, DIRECTION_ORDER_ENUM[this._direction])
+  }
+
+  get state() {
+    return this._state
+  }
+
+  set state(newState) {
+    this._state = newState
+    this.fsm.setParams(this._state, true)
+  }
 
   async init() {
     const sprite = this.addComponent(Sprite)
@@ -31,7 +53,7 @@ export class PlayerManager extends Component {
 
     this.fsm = this.addComponent(PlayerStateMachine)
     await this.fsm.init()
-    this.fsm.setParams(PARAMS_NAME_ENUM.IDLE, true)
+    this.state = ENTITY_STATE_ENUM.IDLE
 
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CTRL, this.move, this)
   }
@@ -70,7 +92,16 @@ export class PlayerManager extends Component {
     } else if (inputDirection === CONTROLLER_ENUM.RIGHT) {
       this.targetX += 1
     } else if (inputDirection === CONTROLLER_ENUM.TURNLEFT) {
-      this.fsm.setParams(PARAMS_NAME_ENUM.TURNLEFT,true)
+      if (this.direction === DIRECTION_ENUM.TOP) {
+        this.direction = DIRECTION_ENUM.LEFT
+      } else if (this.direction === DIRECTION_ENUM.LEFT) {
+        this.direction = DIRECTION_ENUM.BOTTOM
+      } else if (this.direction === DIRECTION_ENUM.BOTTOM) {
+        this.direction = DIRECTION_ENUM.RIGHT
+      } else if (this.direction === DIRECTION_ENUM.RIGHT) {
+        this.direction = DIRECTION_ENUM.TOP
+      }
+      this.state = ENTITY_STATE_ENUM.TURNLEFT
     }
   }
 
