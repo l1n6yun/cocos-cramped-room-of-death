@@ -4,6 +4,8 @@ import { createUINode } from 'db://assets/Utils'
 import Levels, { ILevel } from 'db://assets/Levels'
 import DataManager from 'db://assets/Runtime/DataManager'
 import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/Script/Tile/TileManager'
+import EventManager from 'db://assets/Runtime/EventManager'
+import { EVENT_ENUM } from 'db://assets/Enums'
 
 const { ccclass, property } = _decorator
 
@@ -12,14 +14,23 @@ export class BattleManager extends Component {
   private level: ILevel
   private stage: Node
 
+  onLoad() {
+    EventManager.Instance.on(EVENT_ENUM.NEXT_LEVEL, this.nextLevel, this)
+  }
+
+  onDestroy() {
+    EventManager.Instance.off(EVENT_ENUM.NEXT_LEVEL, this.nextLevel)
+  }
+
   start() {
     this.generateStage()
     this.initLevel()
   }
 
   initLevel() {
-    const level = Levels[`level${1}`]
+    const level = Levels[`level${DataManager.Instance.levelIndex}`]
     if (level) {
+      this.clearLevel()
       this.level = level
 
       DataManager.Instance.mapInfo = this.level.mapInfo
@@ -28,6 +39,18 @@ export class BattleManager extends Component {
 
       this.generateTileMap()
     }
+  }
+
+
+  nextLevel() {
+    DataManager.Instance.levelIndex++
+    this.initLevel()
+  }
+
+  clearLevel() {
+    this.stage.destroyAllChildren()
+    DataManager.Instance.reset()
+
   }
 
   private generateStage() {
