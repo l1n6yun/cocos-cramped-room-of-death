@@ -24,3 +24,13 @@ export enum CONTROLLER_ENUM {
   TURNLEFT = 'TURNLEFT',
   TURNRIGHT = 'TURNRIGHT',
 }
+
+export enum FSM_PARAMS_TYPE_ENUM {
+  NUMBER = 'NUMBER',
+  TRIGGER = 'TRIGGER',
+}
+
+export enum PARAME_NAME_ENUM {
+  IDLE = 'IDLE',
+  TURNLEFT = 'TURNLEFT',
+}
