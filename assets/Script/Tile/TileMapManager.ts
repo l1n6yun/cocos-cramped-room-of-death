@@ -1,5 +1,7 @@
 import { _decorator, Component, Layers, Node, resources, Sprite, SpriteFrame, UITransform } from 'cc'
 import Levels from 'db://assets/Levels'
+import { createUINode } from 'db://assets/Utils'
+import { TileManager } from 'db://assets/Script/Tile/TileManager'
 
 const { ccclass, property } = _decorator
 
@@ -10,7 +12,7 @@ export const TILE_HEIGHT = 55
 export class TileMapManager extends Component {
   async init() {
     const { mapInfo } = Levels[`level${1}`]
-    const spriteFrame = await this.loadRes()
+    const spriteFrames = await this.loadRes()
 
     for (let i = 0; i < mapInfo.length; i++) {
       const column = mapInfo[i]
@@ -20,17 +22,11 @@ export class TileMapManager extends Component {
           continue
         }
 
-        const node = new Node()
-        const sprite = node.addComponent(Sprite)
+        const node = createUINode()
         const imgSrc = `tile (${item.src})`
-        sprite.spriteFrame = spriteFrame.find(v => v.name === imgSrc) || spriteFrame[0]
-
-        const transform = node.addComponent(UITransform)
-        transform.setContentSize(TILE_WIDTH, TILE_HEIGHT)
-
-        node.layer = 1 << Layers.nameToLayer('UI_2D')
-        node.setPosition(i * TILE_WIDTH, -j * TILE_HEIGHT)
-
+        const spriteFrame = spriteFrames.find(v => v.name === imgSrc) || spriteFrames[0]
+        const tileManager = node.addComponent(TileManager)
+        tileManager.init(spriteFrame, i, j)
         node.setParent(this.node)
       }
     }
