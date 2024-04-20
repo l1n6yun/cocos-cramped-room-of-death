@@ -2,6 +2,7 @@ import { _decorator, Component, Layers, Node, resources, Sprite, SpriteFrame, UI
 import Levels from 'db://assets/Levels'
 import { createUINode } from 'db://assets/Utils'
 import { TileManager } from 'db://assets/Script/Tile/TileManager'
+import { DataManagerInstance } from 'db://assets/Runtime/DataManager'
 
 const { ccclass, property } = _decorator
 
@@ -11,7 +12,7 @@ export const TILE_HEIGHT = 55
 @ccclass('TileMapManager')
 export class TileMapManager extends Component {
   async init() {
-    const { mapInfo } = Levels[`level${1}`]
+    const { mapInfo } = DataManagerInstance
     const spriteFrames = await this.loadRes()
 
     for (let i = 0; i < mapInfo.length; i++) {
