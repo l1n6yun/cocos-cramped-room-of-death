@@ -1,6 +1,7 @@
-import { _decorator, AnimationClip, Component,Animation, SpriteFrame } from 'cc'
-import { FSM_PARAMS_TYPE_ENUM, PARAME_NAME_ENUM } from 'db://assets/Enums'
+import { _decorator, Animation, AnimationClip, Component, SpriteFrame } from 'cc'
+import { FSM_PARAMS_TYPE_ENUM, PARAMS_NAME_ENUM } from 'db://assets/Enums'
 import State from 'db://assets/Base/State'
+import { StateMachine } from 'db://assets/Base/StateMachine'
 
 const { ccclass, property } = _decorator
 
@@ -20,67 +21,50 @@ export const getInitParamsTrigger = () => {
 }
 
 @ccclass('PlayerStateMachine')
-export class PlayerStateMachine extends Component {
-  private _currentState: State = null
-  params: Map<string, IParamsValue> = new Map()
-  stateMachines: Map<string, State> = new Map()
-  animationComponent: Animation
-  waitingList:Array<Promise<SpriteFrame[]>> = []
-
-  getParams(paramsName: string) {
-    if (this.params.has(paramsName)) {
-      return this.params.get(paramsName).value
-    }
-  }
-
-  setParams(paramsName: string, value: ParamsValueType) {
-    if (this.params.has(paramsName)) {
-      this.params.get(paramsName).value = value
-      this.run()
-    }
-  }
-
-  get currentState() {
-    return this._currentState
-  }
-
-  set currentState(newState: State) {
-    this._currentState = newState
-    this._currentState.run()
-  }
-
+export class PlayerStateMachine extends StateMachine {
   async init() {
     this.animationComponent = this.addComponent(Animation)
 
     this.initParams()
     this.initStateMachines()
+    this.initAnimationEvent()
 
     await Promise.all(this.waitingList)
   }
 
   private initParams() {
-    this.params.set(PARAME_NAME_ENUM.IDLE, getInitParamsTrigger())
+    this.params.set(PARAMS_NAME_ENUM.IDLE, getInitParamsTrigger())
 
-    this.params.set(PARAME_NAME_ENUM.TURNLEFT, getInitParamsTrigger())
+    this.params.set(PARAMS_NAME_ENUM.TURNLEFT, getInitParamsTrigger())
   }
 
   private initStateMachines() {
-    this.stateMachines.set(PARAME_NAME_ENUM.IDLE, new State(this, 'texture/player/idle/top', AnimationClip.WrapMode.Loop))
-    this.stateMachines.set(PARAME_NAME_ENUM.TURNLEFT, new State(this, 'texture/player/turnleft/top'))
+    this.stateMachines.set(PARAMS_NAME_ENUM.IDLE, new State(this, 'texture/player/idle/top', AnimationClip.WrapMode.Loop))
+    this.stateMachines.set(PARAMS_NAME_ENUM.TURNLEFT, new State(this, 'texture/player/turnleft/top'))
+  }
+
+  private initAnimationEvent() {
+    this.animationComponent.on(Animation.EventType.FINISHED, () => {
+      const name = this.animationComponent.defaultClip.name
+      const whiteList = ['turn']
+      if (whiteList.some(v => name.includes(v))) {
+        this.setParams(PARAMS_NAME_ENUM.IDLE, true)
+      }
+    })
   }
 
   run() {
     switch (this.currentState) {
-      case this.stateMachines.get(PARAME_NAME_ENUM.TURNLEFT):
-      case this.stateMachines.get(PARAME_NAME_ENUM.IDLE):
-        if (this.params.get(PARAME_NAME_ENUM.TURNLEFT)) {
-          this.currentState = this.stateMachines.get(PARAME_NAME_ENUM.TURNLEFT)
-        } else if (this.params.get(PARAME_NAME_ENUM.IDLE)) {
-          this.currentState = this.stateMachines.get(PARAME_NAME_ENUM.IDLE)
+      case this.stateMachines.get(PARAMS_NAME_ENUM.TURNLEFT):
+      case this.stateMachines.get(PARAMS_NAME_ENUM.IDLE):
+        if (this.params.get(PARAMS_NAME_ENUM.TURNLEFT).value) {
+          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.TURNLEFT)
+        } else if (this.params.get(PARAMS_NAME_ENUM.IDLE).value) {
+          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.IDLE)
         }
         break
       default:
-        this.currentState = this.stateMachines.get(PARAME_NAME_ENUM.IDLE)
+        this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.IDLE)
     }
   }
 }

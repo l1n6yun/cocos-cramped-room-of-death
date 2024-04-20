@@ -30,7 +30,7 @@ export enum FSM_PARAMS_TYPE_ENUM {
   TRIGGER = 'TRIGGER',
 }
 
-export enum PARAME_NAME_ENUM {
+export enum PARAMS_NAME_ENUM {
   IDLE = 'IDLE',
   TURNLEFT = 'TURNLEFT',
 }

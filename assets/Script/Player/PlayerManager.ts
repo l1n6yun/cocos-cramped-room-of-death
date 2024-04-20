@@ -5,7 +5,7 @@ import Levels, { ILevel } from 'db://assets/Levels'
 import DataManager from 'db://assets/Runtime/DataManager'
 import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/Script/Tile/TileManager'
 import EventManager from 'db://assets/Runtime/EventManager'
-import { CONTROLLER_ENUM, EVENT_ENUM, PARAME_NAME_ENUM } from 'db://assets/Enums'
+import { CONTROLLER_ENUM, EVENT_ENUM, PARAMS_NAME_ENUM } from 'db://assets/Enums'
 import ResourceManager from 'db://assets/Runtime/ResourceManager'
 import { PlayerStateMachine } from 'db://assets/Script/Player/PlayerStateMachine'
 
@@ -31,7 +31,7 @@ export class PlayerManager extends Component {
 
     this.fsm = this.addComponent(PlayerStateMachine)
     await this.fsm.init()
-    this.fsm.setParams(PARAME_NAME_ENUM.IDLE, true)
+    this.fsm.setParams(PARAMS_NAME_ENUM.IDLE, true)
 
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CTRL, this.move, this)
   }
@@ -70,7 +70,7 @@ export class PlayerManager extends Component {
     } else if (inputDirection === CONTROLLER_ENUM.RIGHT) {
       this.targetX += 1
     } else if (inputDirection === CONTROLLER_ENUM.TURNLEFT) {
-      this.fsm.setParams(PARAME_NAME_ENUM.TURNLEFT,true)
+      this.fsm.setParams(PARAMS_NAME_ENUM.TURNLEFT,true)
     }
   }
 
