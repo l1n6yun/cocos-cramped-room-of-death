@@ -8,3 +8,5 @@ export const createUINode = () => {
   node.layer = 1 << Layers.nameToLayer('UI_2D')
   return node
 }
+
+export const randomBtRange = (start: number, end: number) => Math.floor(start + (end - start) * Math.random())
