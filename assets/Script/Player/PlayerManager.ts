@@ -94,24 +94,100 @@ export class PlayerManager extends EntityManager {
     const { targetX: x, targetY: y, direction } = this
     const { tileInfo } = DataManager.Instance
 
-    if (inputDirection === CONTROLLER_ENUM.TOP) {
-      if (direction == DIRECTION_ENUM.TOP) {
-        const playerNextY = y - 1
-        const weaponNextY = y - 2
+    if (inputDirection !== CONTROLLER_ENUM.TURNLEFT) {
+      let playerNextX
+      let playerNextY
+      let weaponNextX
+      let weaponNextY
+
+      if (inputDirection === CONTROLLER_ENUM.TOP) {
+        playerNextX = x
+        playerNextY = y - 1
+        if (direction == DIRECTION_ENUM.TOP) {
+          weaponNextX = x
+          weaponNextY = y - 2
+        } else if (direction == DIRECTION_ENUM.BOTTOM) {
+          weaponNextX = x
+          weaponNextY = y
+        } else if (direction == DIRECTION_ENUM.LEFT) {
+          weaponNextX = x - 1
+          weaponNextY = y - 1
+        } else if (direction == DIRECTION_ENUM.RIGHT) {
+          weaponNextX = x + 1
+          weaponNextY = y - 1
+        }
         if (playerNextY < 0) {
           return true
         }
-
-        const playerTile = tileInfo[x][playerNextY]
-        const weaponTile = tileInfo[x][weaponNextY]
-
-        if (playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable)) {
-          // empty
-        } else {
+      } else if (inputDirection === CONTROLLER_ENUM.BOTTOM) {
+        playerNextX = x
+        playerNextY = y + 1
+        if (direction == DIRECTION_ENUM.TOP) {
+          weaponNextX = x
+          weaponNextY = y
+        } else if (direction == DIRECTION_ENUM.BOTTOM) {
+          weaponNextX = x
+          weaponNextY = y + 2
+        } else if (direction == DIRECTION_ENUM.LEFT) {
+          weaponNextX = x - 1
+          weaponNextY = y + 1
+        } else if (direction == DIRECTION_ENUM.RIGHT) {
+          weaponNextX = x + 1
+          weaponNextY = y + 1
+        }
+        if (playerNextY > tileInfo.length) {
+          return true
+        }
+      } else if (inputDirection === CONTROLLER_ENUM.LEFT) {
+        playerNextX = x - 1
+        playerNextY = y
+        if (direction == DIRECTION_ENUM.TOP) {
+          weaponNextX = x - 1
+          weaponNextY = y - 1
+        } else if (direction == DIRECTION_ENUM.BOTTOM) {
+          weaponNextX = x - 1
+          weaponNextY = y + 1
+        } else if (direction == DIRECTION_ENUM.LEFT) {
+          weaponNextX = x - 2
+          weaponNextY = y
+        } else if (direction == DIRECTION_ENUM.RIGHT) {
+          weaponNextX = x
+          weaponNextY = y
+        }
+        if (playerNextY > tileInfo.length) {
+          return true
+        }
+      } else if (inputDirection === CONTROLLER_ENUM.RIGHT) {
+        playerNextX = x + 1
+        playerNextY = y
+        if (direction == DIRECTION_ENUM.TOP) {
+          weaponNextX = x + 1
+          weaponNextY = y - 1
+        } else if (direction == DIRECTION_ENUM.BOTTOM) {
+          weaponNextX = x + 1
+          weaponNextY = y + 1
+        } else if (direction == DIRECTION_ENUM.LEFT) {
+          weaponNextX = x
+          weaponNextY = y
+        } else if (direction == DIRECTION_ENUM.RIGHT) {
+          weaponNextX = x + 2
+          weaponNextY = y
+        }
+        if (playerNextY > tileInfo.length) {
           return true
         }
       }
-    } else if (inputDirection === CONTROLLER_ENUM.TURNLEFT) {
+
+      let playerTile = tileInfo[playerNextX][playerNextY]
+      let weaponTile = tileInfo[weaponNextX][weaponNextY]
+      if (playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable)) {
+        // empty
+      } else {
+        return true
+      }
+    }
+
+    if (inputDirection === CONTROLLER_ENUM.TURNLEFT) {
       let nextX
       let nextY
       if (direction === DIRECTION_ENUM.TOP) {
@@ -134,7 +210,7 @@ export class PlayerManager extends EntityManager {
         (!tileInfo[x][y] || tileInfo[x][y].turnable)
       ) {
         //empty
-      }else{
+      } else {
         return true
       }
     }
