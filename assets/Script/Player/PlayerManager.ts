@@ -12,6 +12,7 @@ const { ccclass, property } = _decorator
 export class PlayerManager extends EntityManager {
   targetX: number = 0
   targetY: number = 0
+  isMoving: boolean = false
   private readonly speed = 1 / 10
 
   async init() {
@@ -53,8 +54,10 @@ export class PlayerManager extends EntityManager {
     }
 
     if (Math.abs(this.targetX - this.x) <= 0.1 && Math.abs(this.targetY - this.y) <= 0.1) {
+      this.isMoving = false
       this.x = this.targetX
       this.y = this.targetY
+      EventManager.Instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
     }
   }
 
@@ -69,12 +72,16 @@ export class PlayerManager extends EntityManager {
 
   move(inputDirection: CONTROLLER_ENUM) {
     if (inputDirection === CONTROLLER_ENUM.TOP) {
+      this.isMoving = true
       this.targetY -= 1
     } else if (inputDirection === CONTROLLER_ENUM.BOTTOM) {
+      this.isMoving = true
       this.targetY += 1
     } else if (inputDirection === CONTROLLER_ENUM.LEFT) {
+      this.isMoving = true
       this.targetX -= 1
     } else if (inputDirection === CONTROLLER_ENUM.RIGHT) {
+      this.isMoving = true
       this.targetX += 1
     } else if (inputDirection === CONTROLLER_ENUM.TURNLEFT) {
       if (this.direction === DIRECTION_ENUM.TOP) {
@@ -86,6 +93,7 @@ export class PlayerManager extends EntityManager {
       } else if (this.direction === DIRECTION_ENUM.RIGHT) {
         this.direction = DIRECTION_ENUM.TOP
       }
+      EventManager.Instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
       this.state = ENTITY_STATE_ENUM.TURNLEFT
     }
   }
