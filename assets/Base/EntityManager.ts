@@ -11,6 +11,7 @@ import {
 } from 'db://assets/Enums'
 import { PlayerStateMachine } from 'db://assets/Script/Player/PlayerStateMachine'
 import { IEntity } from 'db://assets/Levels'
+import { StateMachine } from 'db://assets/Base/StateMachine'
 
 const { ccclass, property } = _decorator
 
@@ -19,7 +20,7 @@ const { ccclass, property } = _decorator
 export class EntityManager extends Component {
   x: number = 0
   y: number = 0
-  fsm: PlayerStateMachine
+  fsm: StateMachine
   private _direction: DIRECTION_ENUM
   private _state: ENTITY_STATE_ENUM
   private type: ENTITY_TYPE_ENUM

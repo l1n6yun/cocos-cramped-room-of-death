@@ -10,3 +10,10 @@ export const createUINode = () => {
 }
 
 export const randomBtRange = (start: number, end: number) => Math.floor(start + (end - start) * Math.random())
+
+const reg = /\((\d+)\)/
+
+const getNumberWithinString = (str: string) => parseInt(str.match(reg)[1] || '0')
+
+export const sortSpriteFrame = (spriteFrames: SpriteFrame[]) =>
+  spriteFrames.sort((a, b) => getNumberWithinString(a.name) - getNumberWithinString(b.name))

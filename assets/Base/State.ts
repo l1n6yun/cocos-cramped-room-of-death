@@ -3,6 +3,7 @@ import { PlayerStateMachine } from 'db://assets/Script/Player/PlayerStateMachine
 import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/Script/Tile/TileManager'
 import ResourceManager from 'db://assets/Runtime/ResourceManager'
 import { StateMachine } from 'db://assets/Base/StateMachine'
+import { sortSpriteFrame } from 'db://assets/Utils'
 
 const ANIMATION_SPEED = 1 / 8
 
@@ -25,7 +26,7 @@ export default class State {
 
     const track = new animation.ObjectTrack()
     track.path = new animation.TrackPath().toComponent(Sprite).toProperty('spriteFrame')
-    const frames: Array<[number, SpriteFrame]> = spriteFrame.map((item, index) => [ANIMATION_SPEED * index, item])
+    const frames: Array<[number, SpriteFrame]> = sortSpriteFrame(spriteFrame).map((item, index) => [ANIMATION_SPEED * index, item])
     track.channel.curve.assignSorted(frames)
 
     this.animationClip.addTrack(track)
