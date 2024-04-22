@@ -53,7 +53,7 @@ export class PlayerManager extends EntityManager {
       this.y += this.speed
     }
 
-    if (Math.abs(this.targetX - this.x) <= 0.1 && Math.abs(this.targetY - this.y) <= 0.1) {
+    if (Math.abs(this.targetX - this.x) <= 0.1 && Math.abs(this.targetY - this.y) <= 0.1 && this.isMoving) {
       this.isMoving = false
       this.x = this.targetX
       this.y = this.targetY

@@ -28,7 +28,6 @@ export default class State {
     track.path = new animation.TrackPath().toComponent(Sprite).toProperty('spriteFrame')
     const frames: Array<[number, SpriteFrame]> = sortSpriteFrame(spriteFrame).map((item, index) => [ANIMATION_SPEED * index, item])
     track.channel.curve.assignSorted(frames)
-
     this.animationClip.addTrack(track)
     this.animationClip.name = this.path
     this.animationClip.duration = frames.length * ANIMATION_SPEED
