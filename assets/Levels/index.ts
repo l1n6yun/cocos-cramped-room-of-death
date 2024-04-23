@@ -14,7 +14,7 @@ export interface ISpikes {
   x: number
   y: number
   type: ENTITY_TYPE_ENUM
-  count:number
+  count: number
 }
 
 export interface ITile {
@@ -24,6 +24,11 @@ export interface ITile {
 
 export interface ILevel {
   mapInfo: Array<Array<ITile>>
+  player: IEntity,
+  enemies: IEntity[],
+  spikes: ISpikes[],
+  bursts: IEntity[]
+  door: IEntity
 }
 
 const levels: Record<string, ILevel> = {

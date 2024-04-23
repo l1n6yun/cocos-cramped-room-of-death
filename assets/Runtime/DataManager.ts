@@ -9,28 +9,28 @@ import { BurstManager } from 'db://assets/Script/Burst/BurstManager'
 import { SpikesManager } from 'db://assets/Script/Spikes/SpikesManager'
 
 export default class DataManager extends Singleton {
-  static get Instance() {
-    return super.GetInstance<DataManager>()
-  }
-
-  mapInfo: Array<Array<ITile>>
-  tileInfo:Array<Array<TileManager>>
-
   mapRowCount: number = 0
   mapColumnCount: number = 0
   levelIndex: number = 1
+  mapInfo: Array<Array<ITile>>
+  tileInfo: Array<Array<TileManager>>
   player: PlayerManager = null
   door: DoorManager = null
   enemies: EnemyManager[]
   bursts: BurstManager[]
   spikes: SpikesManager[]
 
+  static get Instance() {
+    return super.GetInstance<DataManager>()
+  }
+
   reset() {
+    this.mapRowCount = 0
+    this.mapColumnCount = 0
     this.mapInfo = []
     this.tileInfo = []
     this.player = null
-    this.mapRowCount = 0
-    this.mapColumnCount = 0
+    this.door = null
     this.enemies = []
     this.bursts = []
     this.spikes = []

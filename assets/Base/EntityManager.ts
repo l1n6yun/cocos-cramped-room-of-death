@@ -17,13 +17,13 @@ import { randomByLen } from 'db://assets/Utils'
 const { ccclass, property } = _decorator
 
 
-@ccclass('PlayerManager')
+@ccclass('EntityManager')
 export class EntityManager extends Component {
   id: string = randomByLen(12)
   x: number = 0
   y: number = 0
   fsm: StateMachine
-  private _direction: DIRECTION_ENUM
+  _direction: DIRECTION_ENUM
   private _state: ENTITY_STATE_ENUM
   private type: ENTITY_TYPE_ENUM
 
@@ -33,7 +33,7 @@ export class EntityManager extends Component {
 
   set direction(newDirection) {
     this._direction = newDirection
-    this.fsm.setParams(PARAMS_NAME_ENUM.DIRECTION, DIRECTION_ORDER_ENUM[this._direction])
+    this.fsm.setParams(PARAMS_NAME_ENUM.DIRECTION, DIRECTION_ORDER_ENUM[newDirection])
   }
 
   get state() {

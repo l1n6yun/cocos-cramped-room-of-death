@@ -24,11 +24,14 @@ export class PlayerManager extends EntityManager {
     this.targetX = this.x
     this.targetY = this.y
 
-    this.direction = DIRECTION_ENUM.TOP
-    this.state = ENTITY_STATE_ENUM.IDLE
-
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CTRL, this.inputHandle, this)
     EventManager.Instance.on(EVENT_ENUM.ATTACK_PLAYER, this.onDead, this)
+  }
+
+  onDestroy() {
+    super.onDestroy()
+    EventManager.Instance.off(EVENT_ENUM.PLAYER_CTRL, this.inputHandle)
+    EventManager.Instance.off(EVENT_ENUM.ATTACK_PLAYER, this.onDead)
   }
 
   update() {
