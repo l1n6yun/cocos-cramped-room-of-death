@@ -1,6 +1,6 @@
 import { _decorator } from 'cc'
 import EventManager from 'db://assets/Runtime/EventManager'
-import { CONTROLLER_ENUM, DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM } from 'db://assets/Enums'
+import { CONTROLLER_ENUM, DIRECTION_ENUM, ENTITY_STATE_ENUM, EVENT_ENUM } from 'db://assets/Enums'
 import { PlayerStateMachine } from 'db://assets/Script/Player/PlayerStateMachine'
 import { EntityManager } from 'db://assets/Base/EntityManager'
 import DataManager from 'db://assets/Runtime/DataManager'
@@ -116,6 +116,8 @@ export class PlayerManager extends EntityManager {
   private willBlock(inputDirection: CONTROLLER_ENUM) {
     const { targetX: x, targetY: y, direction } = this
     const { tileInfo } = DataManager.Instance
+    const { x: doorX, y: doorY, state: doorState } = DataManager.Instance.door
+    const enemies = DataManager.Instance.enemies.filter(enemy => enemy.state !== ENTITY_STATE_ENUM.DEATH)
 
     if (inputDirection !== CONTROLLER_ENUM.TURNLEFT) {
       let playerNextX
@@ -143,6 +145,36 @@ export class PlayerManager extends EntityManager {
           this.state = ENTITY_STATE_ENUM.BLOCKFRONT
           return true
         }
+
+        let playerTile = tileInfo[playerNextX][playerNextY]
+        let weaponTile = tileInfo[weaponNextX][weaponNextY]
+
+        if (
+          ((x === doorX && playerNextY === doorY) || (x === doorX && weaponNextY === doorY)) &&
+          doorState !== ENTITY_STATE_ENUM.DEATH
+        ) {
+          this.state = ENTITY_STATE_ENUM.BLOCKFRONT
+          return true
+        }
+
+        for (let i = 0; i < enemies.length; i++) {
+          const { x: enemyX, y: enemyY } = enemies[i]
+          if (
+            ((x === enemyX && playerNextY === enemyY) || (x === enemyX && weaponNextY === enemyY))
+          ) {
+            this.state = ENTITY_STATE_ENUM.BLOCKFRONT
+            return true
+          }
+        }
+
+
+        if (playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable)) {
+          // empty
+        } else {
+          this.state = ENTITY_STATE_ENUM.BLOCKFRONT
+          return true
+        }
+
       } else if (inputDirection === CONTROLLER_ENUM.BOTTOM) {
         playerNextX = x
         playerNextY = y + 1
@@ -163,6 +195,16 @@ export class PlayerManager extends EntityManager {
           this.state = ENTITY_STATE_ENUM.BLOCKFRONT
           return true
         }
+
+        let playerTile = tileInfo[playerNextX][playerNextY]
+        let weaponTile = tileInfo[weaponNextX][weaponNextY]
+        if (playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable)) {
+          // empty
+        } else {
+          this.state = ENTITY_STATE_ENUM.BLOCKFRONT
+          return true
+        }
+
       } else if (inputDirection === CONTROLLER_ENUM.LEFT) {
         playerNextX = x - 1
         playerNextY = y
@@ -183,6 +225,16 @@ export class PlayerManager extends EntityManager {
           this.state = ENTITY_STATE_ENUM.BLOCKFRONT
           return true
         }
+
+        let playerTile = tileInfo[playerNextX][playerNextY]
+        let weaponTile = tileInfo[weaponNextX][weaponNextY]
+        if (playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable)) {
+          // empty
+        } else {
+          this.state = ENTITY_STATE_ENUM.BLOCKFRONT
+          return true
+        }
+
       } else if (inputDirection === CONTROLLER_ENUM.RIGHT) {
         playerNextX = x + 1
         playerNextY = y
@@ -204,15 +256,14 @@ export class PlayerManager extends EntityManager {
           return true
         }
 
-      }
-
-      let playerTile = tileInfo[playerNextX][playerNextY]
-      let weaponTile = tileInfo[weaponNextX][weaponNextY]
-      if (playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable)) {
-        // empty
-      } else {
-        this.state = ENTITY_STATE_ENUM.BLOCKFRONT
-        return true
+        let playerTile = tileInfo[playerNextX][playerNextY]
+        let weaponTile = tileInfo[weaponNextX][weaponNextY]
+        if (playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable)) {
+          // empty
+        } else {
+          this.state = ENTITY_STATE_ENUM.BLOCKFRONT
+          return true
+        }
       }
     }
 
@@ -231,6 +282,28 @@ export class PlayerManager extends EntityManager {
       } else if (direction === DIRECTION_ENUM.RIGHT) {
         nextX = x + 1
         nextY = y - 1
+      }
+
+      if (
+        ((x === doorX && nextY === doorY) ||
+          (nextX === doorX && y === doorY) ||
+          (nextX === doorX && nextY === doorY)) &&
+        doorState !== ENTITY_STATE_ENUM.DEATH
+      ) {
+        this.state = ENTITY_STATE_ENUM.BLOCKTURNLEFT
+        return true
+      }
+
+      for (let i = 0; i < enemies.length; i++) {
+        const { x: enemyX, y: enemyY } = enemies[i]
+        if (
+          ((x === enemyX && nextY === enemyY) ||
+            (nextX === enemyX && y === enemyY) ||
+            (nextX === enemyX && nextY === enemyY))
+        ) {
+          this.state = ENTITY_STATE_ENUM.BLOCKTURNLEFT
+          return true
+        }
       }
 
       if (
