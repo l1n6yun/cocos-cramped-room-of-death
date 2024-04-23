@@ -6,6 +6,7 @@ import { WoodenSkeletonManager } from 'db://assets/Script/WoodenSkeleton/WoodenS
 import { DoorManager } from 'db://assets/Script/Door/DoorManager'
 import { EnemyManager } from 'db://assets/Base/EnemyManager'
 import { BurstManager } from 'db://assets/Script/Burst/BurstManager'
+import { SpikesManager } from 'db://assets/Script/Spikes/SpikesManager'
 
 export default class DataManager extends Singleton {
   static get Instance() {
@@ -14,20 +15,24 @@ export default class DataManager extends Singleton {
 
   mapInfo: Array<Array<ITile>>
   tileInfo:Array<Array<TileManager>>
-  bursts: BurstManager[] = []
+
   mapRowCount: number = 0
   mapColumnCount: number = 0
   levelIndex: number = 1
   player: PlayerManager = null
   door: DoorManager = null
   enemies: EnemyManager[]
+  bursts: BurstManager[]
+  spikes: SpikesManager[]
 
   reset() {
     this.mapInfo = []
     this.tileInfo = []
     this.player = null
-    this.enemies = []
     this.mapRowCount = 0
     this.mapColumnCount = 0
+    this.enemies = []
+    this.bursts = []
+    this.spikes = []
   }
 }
