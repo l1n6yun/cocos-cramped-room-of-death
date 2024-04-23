@@ -4,6 +4,7 @@ import { CONTROLLER_ENUM, DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, E
 import { PlayerStateMachine } from 'db://assets/Script/Player/PlayerStateMachine'
 import { EntityManager } from 'db://assets/Base/EntityManager'
 import DataManager from 'db://assets/Runtime/DataManager'
+import { IEntity } from 'db://assets/Levels'
 
 const { ccclass, property } = _decorator
 
@@ -15,17 +16,11 @@ export class PlayerManager extends EntityManager {
   isMoving: boolean = false
   private readonly speed = 1 / 10
 
-  async init() {
+  async init(params: IEntity) {
     this.fsm = this.addComponent(PlayerStateMachine)
     await this.fsm.init()
 
-    super.init({
-      x: 2,
-      y: 8,
-      type: ENTITY_TYPE_ENUM.PLAYER,
-      direction: DIRECTION_ENUM.TOP,
-      state: ENTITY_STATE_ENUM.IDLE,
-    })
+    super.init(params)
     this.targetX = this.x
     this.targetY = this.y
 
