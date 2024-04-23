@@ -108,8 +108,8 @@ export class PlayerManager extends EntityManager {
       } else if (this.direction === DIRECTION_ENUM.RIGHT) {
         this.direction = DIRECTION_ENUM.TOP
       }
-      EventManager.Instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
       this.state = ENTITY_STATE_ENUM.TURNLEFT
+      EventManager.Instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
     }
   }
 
@@ -118,6 +118,7 @@ export class PlayerManager extends EntityManager {
     const { tileInfo } = DataManager.Instance
     const { x: doorX, y: doorY, state: doorState } = DataManager.Instance.door
     const enemies = DataManager.Instance.enemies.filter(enemy => enemy.state !== ENTITY_STATE_ENUM.DEATH)
+    const bursts = DataManager.Instance.bursts.filter(burst => burst.state !== ENTITY_STATE_ENUM.DEATH)
 
     if (inputDirection !== CONTROLLER_ENUM.TURNLEFT) {
       let playerNextX
@@ -164,6 +165,16 @@ export class PlayerManager extends EntityManager {
           ) {
             this.state = ENTITY_STATE_ENUM.BLOCKFRONT
             return true
+          }
+        }
+
+        for (let i = 0; i < bursts.length; i++) {
+          const { x: burstX, y: burstY } = bursts[i]
+          if (
+            (x === burstX && playerNextY === burstY) &&
+            (!weaponTile || weaponTile.turnable)
+          ) {
+            return false
           }
         }
 
@@ -317,7 +328,6 @@ export class PlayerManager extends EntityManager {
         return true
       }
     }
-
 
     return false
   }

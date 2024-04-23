@@ -5,6 +5,7 @@ import { PlayerManager } from 'db://assets/Script/Player/PlayerManager'
 import { WoodenSkeletonManager } from 'db://assets/Script/WoodenSkeleton/WoodenSkeletonManager'
 import { DoorManager } from 'db://assets/Script/Door/DoorManager'
 import { EnemyManager } from 'db://assets/Base/EnemyManager'
+import { BurstManager } from 'db://assets/Script/Burst/BurstManager'
 
 export default class DataManager extends Singleton {
   static get Instance() {
@@ -13,6 +14,7 @@ export default class DataManager extends Singleton {
 
   mapInfo: Array<Array<ITile>>
   tileInfo:Array<Array<TileManager>>
+  bursts: BurstManager[] = []
   mapRowCount: number = 0
   mapColumnCount: number = 0
   levelIndex: number = 1
