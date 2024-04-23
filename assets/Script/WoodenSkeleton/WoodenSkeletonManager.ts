@@ -55,7 +55,6 @@ export class WoodenSkeletonManager extends EntityManager {
   }
 
   private onAttack() {
-    debugger
     const { x: playerX, y: playerY, state: playerState } = DataManager.Instance.player
 
     if (

@@ -71,6 +71,10 @@ export class PlayerManager extends EntityManager {
       return
     }
 
+    if (this.willAttack(inputDirection)) {
+      return
+    }
+
     if (this.willBlock(inputDirection)) {
       console.log('block')
       return
@@ -245,5 +249,47 @@ export class PlayerManager extends EntityManager {
 
   private onDead(type: ENTITY_STATE_ENUM) {
     this.state = type
+  }
+
+  private willAttack(type: CONTROLLER_ENUM) {
+    const enemies = DataManager.Instance.enemies
+    for (let i = 0; i < enemies.length; i++) {
+      const { x: enemieX, y: enemieY } = enemies[i]
+      if (
+        type === CONTROLLER_ENUM.TOP &&
+        this.direction === DIRECTION_ENUM.TOP &&
+        enemieX === this.x &&
+        enemieY === this.targetY - 2
+      ) {
+        this.state = ENTITY_STATE_ENUM.ATTACK
+        return true
+      } else if (
+        type === CONTROLLER_ENUM.LEFT &&
+        this.direction === DIRECTION_ENUM.LEFT &&
+        enemieX === this.x - 2 &&
+        enemieY === this.targetY
+      ) {
+        this.state = ENTITY_STATE_ENUM.ATTACK
+        return true
+      } else if (
+        type === CONTROLLER_ENUM.BOTTOM &&
+        this.direction === DIRECTION_ENUM.BOTTOM &&
+        enemieX === this.x &&
+        enemieY === this.targetY + 2
+      ) {
+        this.state = ENTITY_STATE_ENUM.ATTACK
+        return true
+      } else if (
+        type === CONTROLLER_ENUM.RIGHT &&
+        this.direction === DIRECTION_ENUM.RIGHT &&
+        enemieX === this.x + 2 &&
+        enemieY === this.targetY
+      ) {
+        this.state = ENTITY_STATE_ENUM.ATTACK
+        return true
+      }
+    }
+
+    return false
   }
 }
