@@ -19,7 +19,7 @@ export default class SpikesTowSubStateMachine extends SpikesSubStateMachine {
     super(fsm)
     this.stateMachines.set(SPIKE_COUNT_ENUM.ZERO, new State(fsm, `${BASE_URL}/zero`))
     this.stateMachines.set(SPIKE_COUNT_ENUM.ONE, new State(fsm, `${BASE_URL}/one`))
-    this.stateMachines.set(SPIKE_COUNT_ENUM.TOW, new State(fsm, `${BASE_URL}/tow`))
+    this.stateMachines.set(SPIKE_COUNT_ENUM.TWO, new State(fsm, `${BASE_URL}/two`))
     this.stateMachines.set(SPIKE_COUNT_ENUM.THREE, new State(fsm, `${BASE_URL}/three`))
   }
 }

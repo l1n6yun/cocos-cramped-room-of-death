@@ -14,7 +14,8 @@ import { IEntity, ISpikes } from 'db://assets/Levels'
 import { StateMachine } from 'db://assets/Base/StateMachine'
 import { randomByLen } from 'db://assets/Utils'
 import { WoodenSkeletonStateMachine } from 'db://assets/Script/WoodenSkeleton/WoodenSkeletonStateMachine'
-import { SpikesSkeletonStateMachine } from 'db://assets/Script/Spikes/SpikesSkeletonStateMachine'
+import { SpikesStateMachine } from 'db://assets/Script/Spikes/SpikesStateMachine'
+import DataManager from 'db://assets/Runtime/DataManager'
 
 const { ccclass, property } = _decorator
 
@@ -54,7 +55,7 @@ export class SpikesManager extends Component {
     const transform = this.getComponent(UITransform)
     transform.setContentSize(TILE_WIDTH * 4, TILE_HEIGHT * 4)
 
-    this.fsm = this.addComponent(SpikesSkeletonStateMachine)
+    this.fsm = this.addComponent(SpikesStateMachine)
     await this.fsm.init()
 
     this.x = params.x
@@ -62,14 +63,40 @@ export class SpikesManager extends Component {
     this.type = params.type
     this.totalCount = SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM[this.type]
     this.count = params.count
+
+    EventManager.Instance.on(EVENT_ENUM.PLAYER_MOVE_END, this.onLoop, this)
+  }
+
+  onDestroy() {
+    EventManager.Instance.off(EVENT_ENUM.PLAYER_MOVE_END, this.onLoop)
   }
 
   update() {
     this.node.setPosition(this.x * TILE_WIDTH - TILE_WIDTH * 1.5, -this.y * TILE_HEIGHT + TILE_HEIGHT * 1.5)
   }
 
-  onDestroy() {
+  private onLoop() {
+    if (this.count === this.totalCount) {
+      this.count = 1
+    } else {
+      this.count++
+    }
 
+    this.onAttack()
   }
 
+  backZero() {
+    this.count = 0
+  }
+
+  private onAttack() {
+    if (!DataManager.Instance.player) {
+      return
+    }
+
+    const { x: playerX, y: playerY } = DataManager.Instance.player
+    if (this.x === playerX && this.y === playerY && this.count === this.totalCount) {
+      EventManager.Instance.emit(EVENT_ENUM.ATTACK_PLAYER, ENTITY_STATE_ENUM.DEATH)
+    }
+  }
 }

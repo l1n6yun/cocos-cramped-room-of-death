@@ -79,22 +79,22 @@ export enum ENTITY_TYPE_ENUM {
   DOOR = 'DOOR',
   BURST = 'BURST',
   SPIKES_ONE = 'SPIKES_ONE',
-  SPIKES_TOW = 'SPIKES_TOW',
+  SPIKES_TWO = 'SPIKES_TWO',
   SPIKES_THREE = 'SPIKES_THREE',
   SPIKES_FOUR = 'SPIKES_FOUR',
 }
 
 export enum SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM {
   SPIKES_ONE = 2,
-  SPIKES_TOW = 3,
+  SPIKES_TWO = 3,
   SPIKES_THREE = 4,
-  SPIKES_FOUR = 4,
+  SPIKES_FOUR = 5,
 }
 
 export enum SPIKE_COUNT_ENUM {
   ZERO = 'ZERO',
   ONE = 'ONE',
-  TOW = 'TOW',
+  TWO = 'TWO',
   THREE = 'THREE',
   FOUR = 'FOUR',
   FIVE = 'FIVE',
@@ -103,7 +103,7 @@ export enum SPIKE_COUNT_ENUM {
 export enum SPIKE_COUNT_MAP_NUMBER_ENUM {
   ZERO = 0,
   ONE = 1,
-  TOW = 2,
+  TWO = 2,
   THREE = 3,
   FOUR = 4,
   FIVE = 5,

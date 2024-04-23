@@ -17,12 +17,13 @@ import SpikesOneSubStateMachine from 'db://assets/Script/Spikes/SpikesOneSubStat
 import SpikesTowSubStateMachine from 'db://assets/Script/Spikes/SpikesTowSubStateMachine'
 import SpikesThreeSubStateMachine from 'db://assets/Script/Spikes/SpikesThreeSubStateMachine'
 import SpikesFourSubStateMachine from 'db://assets/Script/Spikes/SpikesFourSubStateMachine'
+import { SpikesManager } from 'db://assets/Script/Spikes/SpikesManager'
 
 const { ccclass, property } = _decorator
 
 
-@ccclass('SpikesSkeletonStateMachine')
-export class SpikesSkeletonStateMachine extends StateMachine {
+@ccclass('SpikesStateMachine')
+export class SpikesStateMachine extends StateMachine {
   async init() {
     this.animationComponent = this.addComponent(Animation)
 
@@ -40,32 +41,37 @@ export class SpikesSkeletonStateMachine extends StateMachine {
 
   private initStateMachines() {
     this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_ONE, new SpikesOneSubStateMachine(this))
-    this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_TOW, new SpikesTowSubStateMachine(this))
+    this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_TWO, new SpikesTowSubStateMachine(this))
     this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_THREE, new SpikesThreeSubStateMachine(this))
     this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_FOUR, new SpikesFourSubStateMachine(this))
   }
 
   private initAnimationEvent() {
-    // this.animationComponent.on(Animation.EventType.FINISHED, () => {
-    //   const name = this.animationComponent.defaultClip.name
-    //   const whiteList = ['attack']
-    //   if (whiteList.some(v => name.includes(v))) {
-    //     this.node.getComponent(EntityManager).state = ENTITY_STATE_ENUM.IDLE
-    //   }
-    // })
+    this.animationComponent.on(Animation.EventType.FINISHED, () => {
+      const name = this.animationComponent.defaultClip.name
+      const value = this.getParams(PARAMS_NAME_ENUM.SPIKES_TOTAL_COUNT)
+      if (
+        (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_ONE && name.includes('spikesone/tow')) ||
+        (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_TWO && name.includes('spikestwo/three')) ||
+        (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_THREE && name.includes('spikesthree/four')) ||
+        (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_FOUR && name.includes('spikesfour/five'))
+      ) {
+        this.node.getComponent(SpikesManager).backZero()
+      }
+    })
   }
 
   run() {
     const value = this.getParams(PARAMS_NAME_ENUM.SPIKES_TOTAL_COUNT)
     switch (this.currentState) {
       case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_ONE):
-      case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_TOW):
+      case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_TWO):
       case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_THREE):
       case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_FOUR):
         if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_ONE) {
           this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_ONE)
-        } else if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_TOW) {
-          this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_TOW)
+        } else if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_TWO) {
+          this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_TWO)
         } else if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_THREE) {
           this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_THREE)
         } else if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_FOUR) {
