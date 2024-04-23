@@ -14,6 +14,9 @@ import IdleSubStateMachine from 'db://assets/Script/WoodenSkeleton/IdleSubStateM
 import AttackSubStateMachine from 'db://assets/Script/WoodenSkeleton/AttackSubStateMachine'
 import DeathSubStateMachine from 'db://assets/Script/WoodenSkeleton/DeathSubStateMachine'
 import SpikesOneSubStateMachine from 'db://assets/Script/Spikes/SpikesOneSubStateMachine'
+import SpikesTowSubStateMachine from 'db://assets/Script/Spikes/SpikesTowSubStateMachine'
+import SpikesThreeSubStateMachine from 'db://assets/Script/Spikes/SpikesThreeSubStateMachine'
+import SpikesFourSubStateMachine from 'db://assets/Script/Spikes/SpikesFourSubStateMachine'
 
 const { ccclass, property } = _decorator
 
@@ -37,6 +40,9 @@ export class SpikesSkeletonStateMachine extends StateMachine {
 
   private initStateMachines() {
     this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_ONE, new SpikesOneSubStateMachine(this))
+    this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_TOW, new SpikesTowSubStateMachine(this))
+    this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_THREE, new SpikesThreeSubStateMachine(this))
+    this.stateMachines.set(ENTITY_TYPE_ENUM.SPIKES_FOUR, new SpikesFourSubStateMachine(this))
   }
 
   private initAnimationEvent() {
@@ -53,8 +59,17 @@ export class SpikesSkeletonStateMachine extends StateMachine {
     const value = this.getParams(PARAMS_NAME_ENUM.SPIKES_TOTAL_COUNT)
     switch (this.currentState) {
       case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_ONE):
+      case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_TOW):
+      case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_THREE):
+      case this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_FOUR):
         if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_ONE) {
           this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_ONE)
+        } else if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_TOW) {
+          this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_TOW)
+        } else if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_THREE) {
+          this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_THREE)
+        } else if (value === SPIKES_TYPE_MAP_TOTAL_COUNT_ENUM.SPIKES_FOUR) {
+          this.currentState = this.stateMachines.get(ENTITY_TYPE_ENUM.SPIKES_FOUR)
         } else {
           this.currentState = this.currentState
         }

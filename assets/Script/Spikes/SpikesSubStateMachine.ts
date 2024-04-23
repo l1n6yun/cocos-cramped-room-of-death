@@ -10,15 +10,12 @@ import {
 import State from 'db://assets/Base/State'
 import { AnimationClip } from 'cc'
 import DirectionSubStateMachine from 'db://assets/Base/DirectionSubStateMachine'
-import SpikesSubStateMachine from 'db://assets/Script/Spikes/SpikesSubStateMachine'
 
 const BASE_URL = 'texture/spikes/spikesone'
 
-export default class SpikesOneSubStateMachine extends SpikesSubStateMachine {
-  constructor(fsm: StateMachine) {
-    super(fsm)
-    this.stateMachines.set(SPIKE_COUNT_ENUM.ZERO, new State(fsm, `${BASE_URL}/zero`))
-    this.stateMachines.set(SPIKE_COUNT_ENUM.ONE, new State(fsm, `${BASE_URL}/one`))
-    this.stateMachines.set(SPIKE_COUNT_ENUM.TOW, new State(fsm, `${BASE_URL}/tow`))
+export default class SpikesSubStateMachine extends DirectionSubStateMachine {
+  run() {
+    const value = this.fsm.getParams(PARAMS_NAME_ENUM.SPIKES_CUR_COUNT)
+    this.currentState = this.stateMachines.get(SPIKE_COUNT_MAP_NUMBER_ENUM[value as number])
   }
 }
