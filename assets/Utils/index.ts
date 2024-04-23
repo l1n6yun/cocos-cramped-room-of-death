@@ -9,6 +9,9 @@ export const createUINode = () => {
   return node
 }
 
+export const randomByLen = (len: number) => Array.from({ length: len }).reduce<string>((total, item) => total + Math.floor(Math.random() * 10), '')
+
+
 export const randomBtRange = (start: number, end: number) => Math.floor(start + (end - start) * Math.random())
 
 const reg = /\((\d+)\)/

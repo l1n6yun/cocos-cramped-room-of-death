@@ -67,11 +67,17 @@ export class PlayerManager extends EntityManager {
       return
     }
 
-    if (this.state === ENTITY_STATE_ENUM.DEATH || this.state === ENTITY_STATE_ENUM.AIRDEATH) {
+    if (
+      this.state === ENTITY_STATE_ENUM.DEATH ||
+      this.state === ENTITY_STATE_ENUM.AIRDEATH ||
+      this.state === ENTITY_STATE_ENUM.ATTACK
+    ) {
       return
     }
 
-    if (this.willAttack(inputDirection)) {
+    const id = this.willAttack(inputDirection)
+    if (id) {
+      EventManager.Instance.emit(EVENT_ENUM.ATTACK_ENEMY, id)
       return
     }
 
@@ -252,9 +258,9 @@ export class PlayerManager extends EntityManager {
   }
 
   private willAttack(type: CONTROLLER_ENUM) {
-    const enemies = DataManager.Instance.enemies
+    const enemies = DataManager.Instance.enemies.filter(enemy => enemy.state !== ENTITY_STATE_ENUM.DEATH)
     for (let i = 0; i < enemies.length; i++) {
-      const { x: enemieX, y: enemieY } = enemies[i]
+      const { x: enemieX, y: enemieY, id: enemyId } = enemies[i]
       if (
         type === CONTROLLER_ENUM.TOP &&
         this.direction === DIRECTION_ENUM.TOP &&
@@ -262,7 +268,7 @@ export class PlayerManager extends EntityManager {
         enemieY === this.targetY - 2
       ) {
         this.state = ENTITY_STATE_ENUM.ATTACK
-        return true
+        return enemyId
       } else if (
         type === CONTROLLER_ENUM.LEFT &&
         this.direction === DIRECTION_ENUM.LEFT &&
@@ -270,7 +276,7 @@ export class PlayerManager extends EntityManager {
         enemieY === this.targetY
       ) {
         this.state = ENTITY_STATE_ENUM.ATTACK
-        return true
+        return enemyId
       } else if (
         type === CONTROLLER_ENUM.BOTTOM &&
         this.direction === DIRECTION_ENUM.BOTTOM &&
@@ -278,7 +284,7 @@ export class PlayerManager extends EntityManager {
         enemieY === this.targetY + 2
       ) {
         this.state = ENTITY_STATE_ENUM.ATTACK
-        return true
+        return enemyId
       } else if (
         type === CONTROLLER_ENUM.RIGHT &&
         this.direction === DIRECTION_ENUM.RIGHT &&
@@ -286,10 +292,10 @@ export class PlayerManager extends EntityManager {
         enemieY === this.targetY
       ) {
         this.state = ENTITY_STATE_ENUM.ATTACK
-        return true
+        return enemyId
       }
     }
 
-    return false
+    return ''
   }
 }

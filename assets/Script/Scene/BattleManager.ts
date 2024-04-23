@@ -40,8 +40,8 @@ export class BattleManager extends Component {
       DataManager.Instance.mapColumnCount = this.level.mapInfo[0].length || 0
 
       this.generateTileMap()
-      this.generatePlayer()
       this.generateEnemies()
+      this.generatePlayer()
     }
   }
 
