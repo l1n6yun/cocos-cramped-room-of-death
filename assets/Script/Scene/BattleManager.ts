@@ -8,6 +8,7 @@ import EventManager from 'db://assets/Runtime/EventManager'
 import { EVENT_ENUM } from 'db://assets/Enums'
 import { PlayerManager } from 'db://assets/Script/Player/PlayerManager'
 import { WoodenSkeletonManager } from 'db://assets/Script/WoodenSkeleton/WoodenSkeletonManager'
+import { DoorManager } from 'db://assets/Script/Door/DoorManager'
 
 const { ccclass, property } = _decorator
 
@@ -40,6 +41,7 @@ export class BattleManager extends Component {
       DataManager.Instance.mapColumnCount = this.level.mapInfo[0].length || 0
 
       this.generateTileMap()
+      this.generateDoor()
       this.generateEnemies()
       this.generatePlayer()
     }
@@ -92,5 +94,13 @@ export class BattleManager extends Component {
     const disX = TILE_WIDTH * mapRowCount / 2
     const disY = TILE_HEIGHT * mapColumnCount / 2 + 80
     this.stage.setPosition(-disX, disY)
+  }
+
+  private async generateDoor() {
+    const door = createUINode()
+    door.setParent(this.stage)
+    const doorManager = door.addComponent(DoorManager)
+    await doorManager.init()
+    DataManager.Instance.door = doorManager
   }
 }
