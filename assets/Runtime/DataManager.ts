@@ -7,6 +7,7 @@ import { DoorManager } from 'db://assets/Script/Door/DoorManager'
 import { EnemyManager } from 'db://assets/Base/EnemyManager'
 import { BurstManager } from 'db://assets/Script/Burst/BurstManager'
 import { SpikesManager } from 'db://assets/Script/Spikes/SpikesManager'
+import { SmokeManager } from 'db://assets/Script/Smoke/SmokeManager'
 
 export default class DataManager extends Singleton {
   mapRowCount: number = 0
@@ -19,6 +20,7 @@ export default class DataManager extends Singleton {
   enemies: EnemyManager[]
   bursts: BurstManager[]
   spikes: SpikesManager[]
+  smokes: SmokeManager[]
 
   static get Instance() {
     return super.GetInstance<DataManager>()
@@ -34,5 +36,6 @@ export default class DataManager extends Singleton {
     this.enemies = []
     this.bursts = []
     this.spikes = []
+    this.smokes = []
   }
 }

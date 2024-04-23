@@ -5,13 +5,14 @@ import Levels, { ILevel } from 'db://assets/Levels'
 import DataManager from 'db://assets/Runtime/DataManager'
 import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/Script/Tile/TileManager'
 import EventManager from 'db://assets/Runtime/EventManager'
-import { ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM } from 'db://assets/Enums'
+import { DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM } from 'db://assets/Enums'
 import { PlayerManager } from 'db://assets/Script/Player/PlayerManager'
 import { WoodenSkeletonManager } from 'db://assets/Script/WoodenSkeleton/WoodenSkeletonManager'
 import { DoorManager } from 'db://assets/Script/Door/DoorManager'
 import { BurstManager } from 'db://assets/Script/Burst/BurstManager'
 import { SpikesManager } from 'db://assets/Script/Spikes/SpikesManager'
 import { IronSkeletonManager } from 'db://assets/Script/IronSkeleton/IronSkeletonManager'
+import { SmokeManager } from 'db://assets/Script/Smoke/SmokeManager'
 
 const { ccclass, property } = _decorator
 
@@ -19,11 +20,13 @@ const { ccclass, property } = _decorator
 export class BattleManager extends Component {
   private level: ILevel
   private stage: Node
+  private smokeLayer: Node
 
   onLoad() {
     DataManager.Instance.levelIndex = 1
     EventManager.Instance.on(EVENT_ENUM.NEXT_LEVEL, this.nextLevel, this)
     EventManager.Instance.on(EVENT_ENUM.PLAYER_MOVE_END, this.checkArrived, this)
+    EventManager.Instance.on(EVENT_ENUM.SHOW_SMOKE, this.generateSmoke, this)
   }
 
   onDestroy() {
@@ -50,6 +53,7 @@ export class BattleManager extends Component {
       this.generateTileMap()
       this.generateBursts()
       this.generateSpikes()
+      this.generateSmokeLayer()
       this.generateDoor()
       this.generateEnemies()
       this.generatePlayer()
@@ -144,10 +148,42 @@ export class BattleManager extends Component {
   }
 
   private checkArrived() {
+    if (!DataManager.Instance.player || !DataManager.Instance.door) {
+      return
+    }
+
     const { x: playerX, y: playerY } = DataManager.Instance.player
     const { x: doorX, y: doorY, state: doorState } = DataManager.Instance.door
     if (playerX === doorX && playerY === doorY && doorState === ENTITY_STATE_ENUM.DEATH) {
       EventManager.Instance.emit(EVENT_ENUM.NEXT_LEVEL)
     }
+  }
+
+  private async generateSmoke(x: number, y: number, direction: DIRECTION_ENUM) {
+    const item = DataManager.Instance.smokes.find(smoke => smoke.state === ENTITY_STATE_ENUM.DEATH)
+    if (item) {
+      item.x = x
+      item.y = y
+      item.direction = direction
+      item.state = ENTITY_STATE_ENUM.IDLE
+      item.node.setPosition(x * TILE_WIDTH - TILE_WIDTH * 1.5, -y * TILE_HEIGHT + TILE_HEIGHT * 1.5)
+    } else {
+      const smoke = createUINode()
+      smoke.setParent(this.smokeLayer)
+      const smokeManager = smoke.addComponent(SmokeManager)
+      await smokeManager.init({
+        x,
+        y,
+        direction,
+        state: ENTITY_STATE_ENUM.IDLE,
+        type: ENTITY_TYPE_ENUM.SMOKE,
+      })
+      DataManager.Instance.smokes.push(smokeManager)
+    }
+  }
+
+  private generateSmokeLayer() {
+    this.smokeLayer = createUINode()
+    this.smokeLayer.setParent(this.stage)
   }
 }
