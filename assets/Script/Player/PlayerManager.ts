@@ -33,6 +33,7 @@ export class PlayerManager extends EntityManager {
     this.state = ENTITY_STATE_ENUM.IDLE
 
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CTRL, this.inputHandle, this)
+    EventManager.Instance.on(EVENT_ENUM.ATTACK_PLAYER, this.onDead, this)
   }
 
   update() {
@@ -62,6 +63,14 @@ export class PlayerManager extends EntityManager {
   }
 
   inputHandle(inputDirection: CONTROLLER_ENUM) {
+    if (this.isMoving) {
+      return
+    }
+
+    if (this.state === ENTITY_STATE_ENUM.DEATH || this.state === ENTITY_STATE_ENUM.AIRDEATH) {
+      return
+    }
+
     if (this.willBlock(inputDirection)) {
       console.log('block')
       return
@@ -232,5 +241,9 @@ export class PlayerManager extends EntityManager {
 
 
     return false
+  }
+
+  private onDead(type: ENTITY_STATE_ENUM) {
+    this.state = type
   }
 }
