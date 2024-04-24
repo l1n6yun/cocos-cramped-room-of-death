@@ -14,6 +14,7 @@ import { SpikesManager } from 'db://assets/Script/Spikes/SpikesManager'
 import { IronSkeletonManager } from 'db://assets/Script/IronSkeleton/IronSkeletonManager'
 import { SmokeManager } from 'db://assets/Script/Smoke/SmokeManager'
 import FaderManager from 'db://assets/Runtime/FaderManager'
+import { ShakeManager } from 'db://assets/Script/UI/ShakeManager'
 
 const { ccclass, property } = _decorator
 
@@ -24,7 +25,7 @@ export class BattleManager extends Component {
   private smokeLayer: Node
 
   onLoad() {
-    DataManager.Instance.levelIndex = 1
+    DataManager.Instance.levelIndex = 3
     EventManager.Instance.on(EVENT_ENUM.NEXT_LEVEL, this.nextLevel, this)
     EventManager.Instance.on(EVENT_ENUM.PLAYER_MOVE_END, this.checkArrived, this)
     EventManager.Instance.on(EVENT_ENUM.SHOW_SMOKE, this.generateSmoke, this)
@@ -79,6 +80,7 @@ export class BattleManager extends Component {
   private generateStage() {
     this.stage = createUINode()
     this.stage.setParent(this.node)
+    this.stage.addComponent(ShakeManager)
   }
 
   private async generateTileMap() {
@@ -116,6 +118,7 @@ export class BattleManager extends Component {
     const { mapRowCount, mapColumnCount } = DataManager.Instance
     const disX = TILE_WIDTH * mapRowCount / 2
     const disY = TILE_HEIGHT * mapColumnCount / 2 + 80
+    this.stage.getComponent(ShakeManager).stop()
     this.stage.setPosition(-disX, disY)
   }
 
