@@ -23,6 +23,8 @@ export enum EVENT_ENUM {
   SCREEN_SHAKE = 'SCREEN_SHAKE',
   RECORD_STEP = 'RECORD_STEP',
   REVOKE_STEP = 'REVOKE_STEP',
+  RESTART = 'RESTART',
+  OUR = 'OUR',
 }
 
 export enum CONTROLLER_ENUM {
@@ -119,4 +121,10 @@ export enum SHAKE_TYPE_ENUM {
   BOTTOM = 'BOTTOM',
   LEFT = 'LEFT',
   RIGHT = 'RIGHT',
+}
+
+export enum SCENE_ENUM {
+  Loading = 'Loading',
+  Start = 'Start',
+  Battle = 'Battle',
 }
