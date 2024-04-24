@@ -25,7 +25,7 @@ export class BattleManager extends Component {
   private smokeLayer: Node
 
   onLoad() {
-    DataManager.Instance.levelIndex = 3
+    DataManager.Instance.levelIndex = 1
     EventManager.Instance.on(EVENT_ENUM.NEXT_LEVEL, this.nextLevel, this)
     EventManager.Instance.on(EVENT_ENUM.PLAYER_MOVE_END, this.checkArrived, this)
     EventManager.Instance.on(EVENT_ENUM.SHOW_SMOKE, this.generateSmoke, this)

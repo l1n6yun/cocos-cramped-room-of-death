@@ -416,4 +416,8 @@ export class PlayerManager extends EntityManager {
   private showSmoke(type: DIRECTION_ENUM) {
     EventManager.Instance.emit(EVENT_ENUM.SHOW_SMOKE, this.x, this.y, type)
   }
+
+  onAttackShake(type: SHAKE_TYPE_ENUM) {
+    EventManager.Instance.emit(EVENT_ENUM.SCREEN_SHAKE, type)
+  }
 }
