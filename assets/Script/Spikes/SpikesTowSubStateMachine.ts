@@ -12,7 +12,7 @@ import { AnimationClip } from 'cc'
 import DirectionSubStateMachine from 'db://assets/Base/DirectionSubStateMachine'
 import SpikesSubStateMachine from 'db://assets/Script/Spikes/SpikesSubStateMachine'
 
-const BASE_URL = 'texture/spikes/spikestow'
+const BASE_URL = 'texture/spikes/spikestwo'
 
 export default class SpikesTowSubStateMachine extends SpikesSubStateMachine {
   constructor(fsm: StateMachine) {

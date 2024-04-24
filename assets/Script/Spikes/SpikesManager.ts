@@ -93,6 +93,7 @@ export class SpikesManager extends Component {
     if (!DataManager.Instance.player) {
       return
     }
+    debugger
 
     const { x: playerX, y: playerY } = DataManager.Instance.player
     if (this.x === playerX && this.y === playerY && this.count === this.totalCount) {

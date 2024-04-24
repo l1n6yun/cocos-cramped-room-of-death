@@ -34,6 +34,7 @@ export class BattleManager extends Component {
     EventManager.Instance.on(EVENT_ENUM.REVOKE_STEP, this.revoke, this)
     EventManager.Instance.on(EVENT_ENUM.RESTART, this.initLevel, this)
     EventManager.Instance.on(EVENT_ENUM.OUR, this.outBattle, this)
+    // EventManager.Instance.on(EVENT_ENUM.OUR, this.nextLevel, this)
   }
 
   onDestroy() {
@@ -44,6 +45,7 @@ export class BattleManager extends Component {
     EventManager.Instance.off(EVENT_ENUM.REVOKE_STEP, this.revoke)
     EventManager.Instance.off(EVENT_ENUM.RESTART, this.initLevel)
     EventManager.Instance.off(EVENT_ENUM.OUR, this.outBattle)
+    // EventManager.Instance.off(EVENT_ENUM.OUR, this.nextLevel)
 
     EventManager.Instance.clear()
   }
@@ -64,6 +66,7 @@ export class BattleManager extends Component {
 
       this.clearLevel()
       this.level = level
+      console.log('当前关卡:' + DataManager.Instance.levelIndex)
 
       DataManager.Instance.mapInfo = this.level.mapInfo
       DataManager.Instance.mapRowCount = this.level.mapInfo.length || 0

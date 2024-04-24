@@ -186,8 +186,8 @@ const mapInfo = [
 
 const player: IEntity = {
   x: 2,
-  y: 0,
-  direction: DIRECTION_ENUM.BOTTOM,
+  y: 3,
+  direction: DIRECTION_ENUM.RIGHT,
   state: ENTITY_STATE_ENUM.IDLE,
   type: ENTITY_TYPE_ENUM.PLAYER,
 }
@@ -197,7 +197,7 @@ const enemies: Array<IEntity> = [
     x: 3,
     y: 2,
     direction: DIRECTION_ENUM.TOP,
-    state: ENTITY_STATE_ENUM.IDLE,
+    state: ENTITY_STATE_ENUM.DEATH,
     type: ENTITY_TYPE_ENUM.SKELETON_WOODEN,
   },
   {
