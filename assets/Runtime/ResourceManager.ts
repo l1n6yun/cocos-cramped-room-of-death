@@ -7,7 +7,7 @@ export default class ResourceManager extends Singleton {
     return super.GetInstance<ResourceManager>()
   }
 
-  loadDir(path:string,type: typeof SpriteFrame=SpriteFrame) {
+  loadDir(path: string, type: typeof SpriteFrame = SpriteFrame) {
     return new Promise<SpriteFrame[]>((resolve, reject) => {
       resources.loadDir(path, type, function(err, assets) {
         if (err) {

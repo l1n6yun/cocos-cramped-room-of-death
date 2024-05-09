@@ -37,7 +37,7 @@ export class TileMapManager extends Component {
         const spriteFrame = spriteFrames.find(v => v.name === imgSrc) || spriteFrames[0]
         const tileManager = node.addComponent(TileManager)
         const type = item.type
-        tileManager.init(type ,spriteFrame, i, j)
+        tileManager.init(type, spriteFrame, i, j)
         DataManager.Instance.tileInfo[i][j] = tileManager
         node.setParent(this.node)
       }

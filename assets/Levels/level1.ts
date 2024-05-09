@@ -425,9 +425,9 @@ const mapInfo = [
 ]
 
 const player: IEntity = {
-  x: 7,
-  y: 4,
-  direction: DIRECTION_ENUM.BOTTOM,
+  x: 2,
+  y: 8,
+  direction: DIRECTION_ENUM.TOP,
   state: ENTITY_STATE_ENUM.IDLE,
   type: ENTITY_TYPE_ENUM.PLAYER,
 }

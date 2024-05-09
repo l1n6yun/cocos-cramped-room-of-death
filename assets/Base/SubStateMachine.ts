@@ -6,11 +6,11 @@ import { StateMachine } from 'db://assets/Base/StateMachine'
 const { ccclass, property } = _decorator
 
 @ccclass('SubStateMachine')
-export abstract class SubStateMachine  {
+export abstract class SubStateMachine {
   private _currentState: State = null
   stateMachines: Map<string, State> = new Map()
 
-  constructor(public fsm:StateMachine) {
+  constructor(public fsm: StateMachine) {
   }
 
 
